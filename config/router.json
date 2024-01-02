@@ -1,0 +1,35 @@
+{
+  "routers": [
+    {
+      "name": "users",
+      "pathToFile": "./routes/users.js",
+      "path": "/users",
+      "description": "",
+      "configFile": "users.config.js",
+      "router": "routerusers"
+    },
+    {
+      "name": "room",
+      "pathToFile": "./routes/rooms",
+      "path": "/rooms",
+      "description": "",
+      "configFile": "rooms.config.js"
+    },
+    {
+      "name": "report",
+      "pathToFile": "./routes/reports",
+      "path": "/reports",
+      "description": "",
+      "configFile": "reports.config.js"
+    },
+    {
+      "name": "requests",
+      "pathToFile": "./routes/requests",
+      "path": "/requests",
+      "description": "",
+      "configFile": "requests.config.js"
+    }
+  ],
+  "routerConfigFolder": "./config/router/",
+  "routerMiddleWareFolder": "./middleware/"
+}
