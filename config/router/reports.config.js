@@ -12,16 +12,36 @@ const config = {
       path: apiList.getReport,
       authRequired: 1,
       function: controller.getReport.name,
-      method: 2,
+      middleware: ["check.manager"],
+      method: 1,
     },
     {
       path: apiList.myReport,
       authRequired: 1,
       function: controller.myReport.name,
-      method: 2,
+      method: 1,
+    },
+    {
+      path: apiList.createReport,
+      authRequired: 1,
+      function: controller.createReport.name,
+      method: 1,
+    },
+    {
+      path: apiList.deleteReport,
+      authRequired: 1,
+      function: controller.deleteReport.name,
+      middleware: ["check.manager"],
+      method: 1,
+    },
+    {
+      path: apiList.updateReport,
+      authRequired: 1,
+      function: controller.updateReport.name,
+      method: 1,
     },
   ],
-  middleware: ["check.login", "check.passport"],
+  middleware: ["check.passport"],
 };
 
 module.exports = config;

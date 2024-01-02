@@ -11,10 +11,17 @@ class reportsController extends BaseController {
       Object.keys(dieuKienLoc).forEach((key) => {
         condition[key] = dieuKienLoc[key];
       });
-      console.log(condition);
+      // console.log(condition);
       reportsModel
         .find(condition)
         .then((data) => {
+          if (data.length == 0) {
+            response.responseError(
+              res,
+              { message: "Don't have any report" },
+              401
+            );
+          }
           return response.response(res, data, "Pls try input condition");
         })
         .catch((err) => {
@@ -62,8 +69,13 @@ class reportsController extends BaseController {
         reportsModel
           .aggregate([{ $match: { dateCreate: dateCreate } }])
           .then((data) => {
-            if (data) {
-              return res.json({ message: "Today you already reported" });
+            console.log(data);
+            if (data.length != 0) {
+              response.responseError(
+                res,
+                { message: "Today you already reported" },
+                401
+              );
             }
             reportsModel
               .create({
@@ -90,25 +102,26 @@ class reportsController extends BaseController {
       allowUnknown: false,
     })
       .then((payload) => {
-        reportsModel.findById(_id).then((data) => {
-          if (!data) {
+        reportsModel
+          .findByIdAndUpdate(
+            _id,
+            {
+              numberParty: numberParty,
+              info: info,
+              contractsNumber: contractsNumber,
+            },
+            { new: true }
+          )
+          .then((data) => {
+            if (!data) {
+              return response.responseError(
+                res,
+                { message: "Don't have ID" },
+                401
+              );
+            }
             return response.response(res, data);
-          }
-          reportsModel
-            .findByIdAndUpdate(
-              _id,
-              {
-                numberParty: numberParty,
-                info: info,
-                contractsNumber: contractsNumber,
-              },
-              { new: true }
-            )
-            .then((data) => {
-              return response.response(res, data);
-              // return res.json({ data });
-            });
-        });
+          });
       })
       .catch((err) => {
         response.responseError(res, err, 404);

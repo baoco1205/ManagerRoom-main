@@ -65,8 +65,11 @@ class requestController extends BaseController {
         });
         if (dieuKienLoc.dateStart && dieuKienLoc.dateEnd) {
           if (dieuKienLoc.dateStart > dieuKienLoc.dateEnd) {
-            respose;
-            return res.json({ message: "date start must before date end " });
+            return response.responseError(
+              res,
+              { message: "date start must before date end " },
+              401
+            );
           }
           let dateStart = new Date(dieuKienLoc.dateStart);
           let dateEnd = new Date(dieuKienLoc.dateEnd);
@@ -78,7 +81,7 @@ class requestController extends BaseController {
           delete queryConditions.dateStart;
           delete queryConditions.dateEnd;
         }
-        console.log(queryConditions);
+        // console.log(queryConditions);
         requestModel
           .find(queryConditions) //=> .find({session:0, date:'abcyxz'})
           .then((data) => {
@@ -128,19 +131,24 @@ class requestController extends BaseController {
   static createRequest(req, res, next) {
     var { date, numberCustomer, status, floor, session } = req.body;
     // date = date.split("T")[0];
-    console.log(date);
+    // console.log(date);
 
     CHECK_SCHEMA.CREATE_REQUEST_SCHEMA.validateAsync(req.body, {
       allowUnknown: false,
     })
       .then((payload) => {
-        let now = NOW;
-        let checkDate = new Date(date);
+        // let now = NOW;
+        let checkDate = new Date(date + "T00:00:00");
         if (checkDate < NOW) {
-          response.response(
+          console.log(checkDate);
+          console.log(NOW);
+          return response.responseError(
             res,
-            undefined,
-            "The day you chose must belongs to the present or future"
+            {
+              message:
+                "The day you chose must belongs to the present or future",
+            },
+            400
           );
         }
 
@@ -148,7 +156,11 @@ class requestController extends BaseController {
           .findOne({ date: date, floor: floor, session: session })
           .then((data) => {
             if (data) {
-              res.json({ message: "DUPLICATED INFO", data: data });
+              response.responseError(
+                res,
+                { message: "DUPLICATED INFO", data: data },
+                400
+              );
             } else {
               requestModel
                 .create({
@@ -183,7 +195,7 @@ class requestController extends BaseController {
   }
 
   static updateRequest(req, res, next) {
-    CHECK_SCHEMA.UPDATEREQUESTSCHEMA.validateAsync(req.body, {
+    CHECK_SCHEMA.UPDATE_REQUEST_SCHEMA.validateAsync(req.body, {
       allowUnknown: false,
     })
       .then((payload) => {
@@ -193,19 +205,21 @@ class requestController extends BaseController {
         date = new Date(date);
 
         if (date < now) {
-          response.response(
+          response.responseError(
             res,
-            undefined,
-            "The chosen date must be greater than the current date. "
+            {
+              message: "The chosen date must be greater than the current date.",
+            },
+            401
           );
         }
 
         return requestModel
           .findOne({
             _id: new mongoose.Types.ObjectId(_id),
-            date,
-            floor,
-            session,
+            date: date,
+            floor: floor,
+            session: session,
           })
           .then(async (data2) => {
             if (!data2) {
@@ -217,24 +231,20 @@ class requestController extends BaseController {
                 })
                 .then((data3) => {
                   if (!data3) {
-                    response.response(res, undefined, "no record");
+                    response.responseError(res, { message: "no record" }, 401);
                   }
-                  response.response(
-                    res,
-                    undefined,
-                    "this request update success"
-                  );
+                  response.response(res, data3, "this request update success");
                 });
             }
-            response.response(
+            response.responseError(
               res,
-              undefined,
-              "this request is busy, pls choose another time"
+              { message: "this request is busy, pls choose another time" },
+              401
             );
           });
       })
       .catch((err) => {
-        response.responseError(res, err, 400);
+        return response.responseError(res, err, 400);
       });
   }
 
@@ -251,7 +261,16 @@ class requestController extends BaseController {
           .findOne({ date: date, session: session, floor: floor })
           .then((data) => {
             if (!data) {
-              response.response(res, undefined, "PLS CHECK ORDER NEED CANCEL");
+              return response.responseError(
+                res,
+                { message: "PLS CHECK ORDER NEED CANCEL" },
+                401
+              );
+            }
+            if (data.status == REQUEST.OFF) {
+              return response.responseError(res, {
+                message: "this request already cancel",
+              });
             }
             if (data.status != REQUEST.OFF) {
               requestModel
@@ -262,7 +281,11 @@ class requestController extends BaseController {
                 .then((data) => {
                   console.log(data);
                   if (!data) {
-                    response.response(res, undefined, "pls recheck input ");
+                    response.response(
+                      res,
+                      { messsage: "pls recheck input " },
+                      401
+                    );
                   }
                   response.response(res, data, "cancel success");
                 });

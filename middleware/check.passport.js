@@ -5,7 +5,6 @@ const passport = require("passport");
 const userModel = require("../database/user");
 const cookieExtractor = function (req) {
   var token = ExtractJwt.fromAuthHeaderAsBearerToken();
-  // console.log(req.cookies["jwt"]);
   token =
     token(req) ||
     req.cookies["jwt"] ||

@@ -39,6 +39,8 @@ class BaseRouter {
             );
           }
         }
+        // parsing params
+        arrParams.push(require("../middleware/parseconfig"));
 
         // target function
         if (

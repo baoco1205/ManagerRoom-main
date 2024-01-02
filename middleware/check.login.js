@@ -18,10 +18,10 @@ var checkLogin = function (req, res, next) {
       }
       bcrypt.compare(password, data.password, function (err, result) {
         if (err) {
-          res.json("WRONG PASSWORD OR USERNAME");
+          return res.json("WRONG PASSWORD OR USERNAME");
         }
         if (!result) {
-          res.json("WRONG PASSWORD OR USERNAME");
+          return res.json("WRONG PASSWORD OR USERNAME");
         }
         var id = data._id.toString();
         let token = jwt.sign({ id }, KEY_TOKEN.keyToken, {
