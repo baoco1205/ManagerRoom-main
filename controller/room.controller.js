@@ -1,19 +1,13 @@
 const roomsModel = require("../database/room");
 const Joi = require("@hapi/joi");
 //const
-<<<<<<< HEAD
 const { CHECK_SCHEMA } = require("../const");
 const BaseController = require("./base.controller");
 const response = require("./response");
-=======
-const { CHECKSCHEMA } = require("../const");
-const BaseController = require("./base.controller");
->>>>>>> 21c15f2c36e6e8283fbc28d60f2622a700f30941
 
 /////
 class roomController extends BaseController {
   static getRoom(req, res) {
-<<<<<<< HEAD
     const dieuKienLoc = req.body;
     const queryConditions = {};
     Object.keys(dieuKienLoc).forEach((key) => {
@@ -27,64 +21,12 @@ class roomController extends BaseController {
       .catch((err) => {
         response.responseError(res, err, 405);
       });
-=======
-    var { status, roomSize } = req.body;
-    if ((status, roomSize)) {
-      roomsModel
-        .find({ status: status, roomSize: { $lt: `${roomSize}` } })
-        .then((data) => {
-          return res.json({ message: "Get success", data: data });
-        })
-        .catch((err) => {
-          let error = new Error(err);
-          error.statusCode = 403;
-          throw error;
-        });
-    } else if (status) {
-      roomsModel
-        .find({ status: status })
-        .then((data) => {
-          return res.json({ message: "Get success status", data: data });
-        })
-        .catch((err) => {
-          let error = new Error(err);
-          error.statusCode = 403;
-          throw error;
-        });
-    } else if (roomSize) {
-      roomsModel
-        .find({ roomSize: roomSize })
-        .then((data) => {
-          return res.json({ message: "Get success roomsize", data: data });
-        })
-        .catch((err) => {
-          let error = new Error(err);
-          error.statusCode = 403;
-          throw error;
-        });
-    } else {
-      roomsModel
-        .find()
-        .then((data) => {
-          res.json({ Message: "GET ALL ROOM SUCCESS", data: data });
-        })
-        .catch((err) => {
-          var error = new Error();
-          error.statusCode = 400;
-          throw error;
-        });
-    }
->>>>>>> 21c15f2c36e6e8283fbc28d60f2622a700f30941
   }
   static createRoom(req, res) {
     var { roomSize, numberCustomer, floor } = req.body;
 
     //status có 2 dạng free =0 or doing =1
-<<<<<<< HEAD
     CHECK_SCHEMA.CREATE_ROOM_SCHEMA.validateAsync(req.body, {
-=======
-    CHECKSCHEMA.CREATEROOMSCHEMA.validateAsync(req.body, {
->>>>>>> 21c15f2c36e6e8283fbc28d60f2622a700f30941
       allowUnknown: false,
     })
       .then((payload) => {
@@ -102,11 +44,7 @@ class roomController extends BaseController {
           });
       })
       .catch((err) => {
-<<<<<<< HEAD
         var error = new Error(err);
-=======
-        var error = new Error();
->>>>>>> 21c15f2c36e6e8283fbc28d60f2622a700f30941
         error.statusCode = 400;
         throw error;
       });
@@ -163,10 +101,6 @@ class roomController extends BaseController {
   }
   static deleteRoom(req, res) {
     var id = req.body._id;
-<<<<<<< HEAD
-=======
-    console.log("aaaaaaaaaa" + id);
->>>>>>> 21c15f2c36e6e8283fbc28d60f2622a700f30941
     roomsModel
       .findByIdAndDelete({ _id: id })
       .then((data) => {
@@ -182,13 +116,7 @@ class roomController extends BaseController {
   }
   static updateStatus(req, res) {
     var { id, status } = req.body;
-<<<<<<< HEAD
     //////
-=======
-
-    //////
-
->>>>>>> 21c15f2c36e6e8283fbc28d60f2622a700f30941
     var updateRoomSchema = Joi.object({
       status: Joi.number().min(0).max(1).required(),
       id: Joi.string().required(),
@@ -207,7 +135,6 @@ class roomController extends BaseController {
       throw error;
     }
     //////
-<<<<<<< HEAD
     let fillterCondition = req.body;
     let query = {};
     Object.keys(fillterCondition).forEach((key) => {
@@ -223,13 +150,6 @@ class roomController extends BaseController {
         } else {
           response.responseError(res, { message: "ID does not exist" });
         }
-=======
-    roomsModel
-      .findByIdAndUpdate({ _id: id }, { status: status })
-      .then((data) => {
-        console.log(data);
-        res.json({ message: "UPDATE STATUS SUCCESS", data: data });
->>>>>>> 21c15f2c36e6e8283fbc28d60f2622a700f30941
       })
       .catch((err) => {
         var error = new Error(err);
