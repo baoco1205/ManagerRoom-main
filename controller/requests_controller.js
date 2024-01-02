@@ -68,7 +68,7 @@ class requestController extends BaseController {
             return response.responseError(
               res,
               { message: "date start must before date end " },
-              401
+              400
             );
           }
           let dateStart = new Date(dieuKienLoc.dateStart);
@@ -105,26 +105,26 @@ class requestController extends BaseController {
       allowUnknown: false,
     })
       .then((payload) => {
+        console.log(req.body);
+        // let dateSchema = new Date(date);
+        let newDate = new Date(date);
+        console.log(newDate);
+
         requestModel
           .findOne({ session: session, date: date, floor: floor })
           .then((data) => {
-            // console.log(data);
-            let isBooking = {};
-
             if (!data) {
-              isBooking.is_Booking = true;
-              return response.response(
-                res,
-                isBooking,
-                "This booking can be order."
-              );
+              return response.response(res, {
+                message: "This booking can be order.",
+              });
             } else {
-              isBooking.is_Booking = false;
-              return response.response(res, isBooking, "Your booking is busy.");
+              console.log("Trung lich r");
+              return response.response(res, data, "Your booking is busy.");
             }
           });
       })
       .catch((err) => {
+        console.log(err);
         response.responseError(res, err, 404);
       });
   }
@@ -210,7 +210,7 @@ class requestController extends BaseController {
             {
               message: "The chosen date must be greater than the current date.",
             },
-            401
+            400
           );
         }
 
@@ -231,7 +231,7 @@ class requestController extends BaseController {
                 })
                 .then((data3) => {
                   if (!data3) {
-                    response.responseError(res, { message: "no record" }, 401);
+                    response.responseError(res, { message: "no record" }, 400);
                   }
                   response.response(res, data3, "this request update success");
                 });
@@ -239,7 +239,7 @@ class requestController extends BaseController {
             response.responseError(
               res,
               { message: "this request is busy, pls choose another time" },
-              401
+              400
             );
           });
       })
@@ -264,7 +264,7 @@ class requestController extends BaseController {
               return response.responseError(
                 res,
                 { message: "PLS CHECK ORDER NEED CANCEL" },
-                401
+                400
               );
             }
             if (data.status == REQUEST.OFF) {
@@ -284,7 +284,7 @@ class requestController extends BaseController {
                     response.response(
                       res,
                       { messsage: "pls recheck input " },
-                      401
+                      400
                     );
                   }
                   response.response(res, data, "cancel success");

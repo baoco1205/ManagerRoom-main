@@ -88,12 +88,12 @@ class reportsController extends BaseController {
                 deleted: DELETE.UNDELETED,
               })
               .then((data) => {
-                response.response(res, data);
+                return response.response(res, data);
               });
           });
       })
       .catch((err) => {
-        response.responseError(res, err, 404);
+        return response.responseError(res, err, 404);
       });
   }
   static updateReport(req, res, next) {

@@ -145,7 +145,6 @@ class UserController extends BaseController {
         var hashPassword = await brypt.hash(password, salt);
         password = hashPassword;
         if (role === ROLE.ADMIN) {
-          console.log("testtt");
           usersModel
             .findByIdAndUpdate(
               {
@@ -163,7 +162,7 @@ class UserController extends BaseController {
             )
             .then((data) => {
               if (!data) {
-                response.responseError(res, { message: "Maybe wrong ID" });
+                response.responseError(res, { message: "Wrong ID" });
               }
               if (data) {
                 // console.log(data);
@@ -290,14 +289,13 @@ class UserController extends BaseController {
     let { _id } = req.body;
     CHECK_SCHEMA.CHECK_ID.validateAsync(req.body, { allowUnknown: false })
       .then(async (payload) => {
-        console.log("testtzzz");
         usersModel.find({ _id: _id, deleted: 0 }).then((data) => {
           if (data.length === 0) {
-            response.response(res, { message: "User already deleted" });
+            return response.response(res, { message: "User already deleted" });
           }
           usersModel.findByIdAndUpdate(_id, { deleted: 1 }).then((data) => {
             let dataAfterChange = without.withoutPassword(data);
-            response.response(res, dataAfterChange);
+            return response.response(res, dataAfterChange);
           });
         });
       })
