@@ -40,7 +40,6 @@ class roomController extends BaseController {
           })
           .then((data) => {
             var id = data._id;
-            // res.json({ message: "Create room complete!!", id: id });
             response.response(res, {
               message: "Create room complete!!",
               id: id,
@@ -91,10 +90,9 @@ class roomController extends BaseController {
       )
       .then((data) => {
         if (data) {
-          res.json({ message: "UPDATE SUCCESS", data: data });
+          response.response(res, data);
         } else {
-          console.log(data);
-          res.status(400).json("UPDATE FAILS");
+          response.responseError(res, { message: "UPDATE FAILS" }, 500);
         }
       })
       .catch((err) => {
@@ -109,9 +107,9 @@ class roomController extends BaseController {
       .findByIdAndDelete({ _id: id })
       .then((data) => {
         if (data) {
-          res.json({ message: "DELETE SUCCESS", data: data });
+          response.response(res, { message: "DELETE SUCCESS", data: data });
         } else {
-          res.json({ message: "PLS CHECK ID" });
+          response.responseError(res, { message: "PLS CHECK ID" }, 400);
         }
       })
       .catch((err) => {

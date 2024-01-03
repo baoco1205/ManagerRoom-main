@@ -6,51 +6,6 @@ const { STATUS, CHECK_SCHEMA, REQUEST, SESSION, NOW } = require("../const");
 const response = require("./response");
 const BaseController = require("./base.controller");
 class requestController extends BaseController {
-  static getRequestTest(req, res, next) {
-    var { key, valueKey } = req.body;
-    if (key) {
-      switch (key) {
-        case "date": {
-          requestModel
-            .find({ date: valueKey })
-            .then((data) => {
-              res.json({ message: "GET DATA FOR DATE", data: data });
-            })
-            .catch((err) => {
-              var error = new Error("GET REQUEST FAILS!!!: " + err);
-              error.statusCode = 500;
-              throw error;
-            });
-          break;
-        }
-
-        case "status": {
-          requestModel
-            .find({ status: valueKey })
-            .then((data) => {
-              res.json({ message: "GET DATA FOR DATE", data: data });
-            })
-            .catch((err) => {
-              var error = new Error("GET REQUEST FAILS!!!: " + err);
-              error.statusCode = 500;
-              throw error;
-            });
-          break;
-        }
-      }
-    } else {
-      requestModel
-        .find({})
-        .then((data) => {
-          res.json({ message: "GET REQUEST SUCCESS", data: data });
-        })
-        .catch((err) => {
-          var error = new Error("CAN'T NOT GET YOUR REPORT" + err);
-          error.statusCode = 400;
-          throw error;
-        });
-    }
-  }
   static getRequest(req, res, next) {}
   static findRequest(req, res, next) {
     const { date, session, floor, dateStart, dateEnd } = req.body;
