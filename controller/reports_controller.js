@@ -31,12 +31,6 @@ class reportsController extends BaseController {
       reportsModel
         .find()
         .then((data) => {
-          if (data.length === 0)
-            return response.response(
-              undefined,
-              undefined,
-              "Don't have condition satisfy"
-            );
           return response.response(res, data);
         })
         .catch((err) => {
@@ -60,18 +54,18 @@ class reportsController extends BaseController {
     // var dateCreate = new Date().toLocaleString("vi-VN");
     var dateCreate = NOW;
     let { username } = req.user;
-
     var { numberParty, info, contractsNumber, date } = req.body;
     CHECK_SCHEMA.CHECK_CREATE_REPORT.validateAsync(req.body, {
       allowUnknown: false,
     })
       .then((payload) => {
         reportsModel
-          .aggregate([{ $match: { dateCreate: dateCreate } }])
+          .aggregate([
+            { $match: { dateCreate: dateCreate, username: username } },
+          ])
           .then((data) => {
-            console.log(data);
-            if (data.length != 0) {
-              response.responseError(
+            if (data) {
+              return response.responseError(
                 res,
                 { message: "Today you already reported" },
                 401

@@ -2,17 +2,9 @@ const mongoose = require("mongoose");
 const database = "MANAGER_ROOM";
 const ip = "127.0.0.1:27017";
 const { REQUEST, DELETE, SESSION } = require("../const");
-mongoose
-  .connect(`mongodb://${ip}/${database}`)
-  .then(() => console.log("Connected database!"))
-  .catch((err) => {
-    console.log(err);
-  });
 var today = new Date();
 var datetimeVN = today.toLocaleString("vi-VN");
-
 const Schema = mongoose.Schema;
-
 const requestsSchema = new Schema(
   {
     date: {

@@ -40,7 +40,11 @@ class roomController extends BaseController {
           })
           .then((data) => {
             var id = data._id;
-            res.json({ message: "Create room complete!!", id: id });
+            // res.json({ message: "Create room complete!!", id: id });
+            response.response(res, {
+              message: "Create room complete!!",
+              id: id,
+            });
           });
       })
       .catch((err) => {

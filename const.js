@@ -26,6 +26,7 @@ const REQUEST = {
   ON: 1,
   DOING: 2,
 };
+
 const SESSION = { MORNING: 0, EVENING: 1 };
 //Map<Object,Object> maps = {'key':value}
 const CHECK_SCHEMA = {

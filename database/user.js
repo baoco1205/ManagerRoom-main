@@ -5,8 +5,6 @@ const { DELETE, ROLE } = require("../const");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
-mongoose.connect(`mongodb://${ip}/${database}`).then(() => {});
-
 const Schema = mongoose.Schema;
 
 const UsersSchema = new Schema(
@@ -34,30 +32,5 @@ const UsersSchema = new Schema(
 );
 const usersModel = mongoose.model("users", UsersSchema);
 let db = mongoose.connection;
-db.once("open", () => {
-  usersModel
-    .findOne({ username: "admin@admin" })
-    .then((data) => {
-      if (!data) {
-        let password = "passwordforadmin";
-        bcrypt.hash(password, saltRounds, function (err, hash) {
-          usersModel
-            .create({
-              username: "admin@admin",
-              password: hash,
-              role: ROLE.ADMIN,
-            })
-            .then((data) => {
-              console.log("Create admin success");
-            })
-            .catch((err) => {
-              let error = new Error(err);
-              error.statusCode = 400;
-              throw error;
-            });
-        });
-      }
-    })
-    .catch((err) => {});
-});
+
 module.exports = usersModel;

@@ -261,7 +261,11 @@ class UserController extends BaseController {
       .findOne({ username: usernameNew })
       .then((data) => {
         if (data) {
-          res.json("User name has been used");
+          response.responseError(
+            res,
+            { message: "User name has been used" },
+            400
+          );
         } else {
           usersModel
             .create({
@@ -273,10 +277,9 @@ class UserController extends BaseController {
               role: 0,
               note: note,
             })
-            .then(res.json("Create user complete!!"))
-            .catch((err) =>
-              res.status(500).json("Create fails, have error: " + err)
-            );
+            .then(() => {
+              response.response(res, { message: "Create user complete!!" });
+            });
         }
       })
       .catch((err) => {

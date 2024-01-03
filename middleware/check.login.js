@@ -11,17 +11,33 @@ var checkLogin = function (req, res, next) {
     .findOne({ username: username })
     .then((data) => {
       if (!data) {
-        return res.json("WRONG PASSWORD OR USERNAME");
+        response.responseError(
+          res,
+          { message: "WRONG PASSWORD OR USERNAME" },
+          400
+        );
       }
       if (data.deleted === 1) {
-        return res.json({ message: "Your accounter is deleted" });
+        response.responseError(
+          res,
+          { message: "Your accounter is deleted" },
+          400
+        );
       }
       bcrypt.compare(password, data.password, function (err, result) {
         if (err) {
-          return res.json("WRONG PASSWORD OR USERNAME");
+          response.responseError(
+            res,
+            { message: "WRONG PASSWORD OR USERNAME" },
+            400
+          );
         }
         if (!result) {
-          return res.json("WRONG PASSWORD OR USERNAME");
+          response.responseError(
+            res,
+            { message: "WRONG PASSWORD OR USERNAME" },
+            400
+          );
         }
         var id = data._id.toString();
         let token = jwt.sign({ id }, KEY_TOKEN.keyToken, {

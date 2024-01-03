@@ -2,8 +2,6 @@ const mongoose = require("mongoose");
 const database = "MANAGER_ROOM";
 const ip = "127.0.0.1:27017";
 const { DELETE, ROLE } = require("../const");
-mongoose.connect(`mongodb://${ip}/${database}`).then(() => {});
-let db = mongoose.connection;
 
 const Schema = mongoose.Schema;
 
